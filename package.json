@@ -10,20 +10,38 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:comde.helloWorld"
+		"onCommand:comde.lowTemp",
+		"onCommand:comde.midTemp",
+		"onCommand:comde.highTemp"
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "comde.helloWorld",
-				"title": "Hello World"
+				"command": "comde.lowTemp",
+				"title": "COMDE - Low Temp"
+			},
+			{
+				"command": "comde.midTemp",
+				"title": "COMDE - Medium Temp"
+			},
+			{
+				"command": "comde.highTemp",
+				"title": "COMDE - High Temp"
 			}
 		],
 		"menus": {
 			"editor/context": [
 				{
-					"command": "comde.helloWorld",
+					"command": "comde.highTemp",
+					"group": "navigation"
+				},
+				{
+					"command": "comde.midTemp",
+					"group": "navigation"
+				},
+				{
+					"command": "comde.lowTemp",
 					"group": "navigation"
 				}
 			]
@@ -58,7 +76,6 @@
 		"webpack-cli": "^4.4.0"
 	},
 	"dependencies": {
-		"axios": "^0.21.1",
 		"dotenv": "^8.2.0",
 		"node-fetch": "^2.6.1"
 	}

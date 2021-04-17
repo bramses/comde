@@ -1,12 +1,21 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
+# index.ts -- low temperature: Typescript
+
+This code is importing the VSCode library and the dotenv library. It also imports OpenAI, which is a library for AI.
+
+```
 import * as vscode from 'vscode'
 import * as dotenv from 'dotenv'
 // @ts-ignore
 import * as OpenAI from '../openai/index.js'
 import fetch from 'node-fetch'
 import * as fs from 'fs'
+```
 
+# index.ts -- low temperature: Typescript
+
+This code is setting up the environment for an OpenAI agent.
+
+```
 dotenv.config()
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const openai = new OpenAI(OPENAI_API_KEY);
@@ -14,7 +23,14 @@ const openai = new OpenAI(OPENAI_API_KEY);
 const lowTemp = 0.05
 const midTemp = 0.5
 const highTemp = 1.0
+```
 
+# index.ts -- low temperature: Typescript
+
+
+This code is fetching the completion of a GPT-3 task.
+
+```
 const fetchCompletion = async (prompt: string, temperature: number) => {
 
 	try {
@@ -44,7 +60,13 @@ const fetchCompletion = async (prompt: string, temperature: number) => {
 		vscode.window.showInformationMessage("Error fetching GPT-3 Completion, see log");
 	}
 }
+```
+# index.ts -- low temperature: Typescript
 
+
+This code is appending the contents of a file to another file.
+
+```
 const appendToMD = (filename: string = "No Filename Found", temperature:number, language: string, descriptionResult: string, codeBlock: string = "") => {
 	const mdResult = `# ${filename} -- ${temperature == lowTemp ? "low temperature" : temperature == midTemp ? "mid temperature" : "high temperature"}: ${language}\n${descriptionResult}\n\n\`\`\`\n${codeBlock}\n\`\`\`\n`
 
@@ -56,9 +78,13 @@ const appendToMD = (filename: string = "No Filename Found", temperature:number, 
 		console.log("Successfully appended to COMDE.md");
 	});
 }
+```
+# index.ts -- low temperature: Typescript
 
-const descriptionPrompt = (language: string, codeBlock: string | undefined) => `What is this ${language} code doing?\n\nCode:\n\`\`\`\n${codeBlock}\n\`\`\`\n\nAnswer: `
 
+This code is a function that will be executed every time the command is executed. It checks to see what type of file it is and then executes the appropriate code.
+
+```
 const logic = async (editor: vscode.TextEditor | undefined, temperature: number) => {
 	// The code you place here will be executed every time your command is executed
 	const codeBlock: string | undefined = editor?.document.getText(editor.selection)
@@ -110,11 +136,14 @@ const logic = async (editor: vscode.TextEditor | undefined, temperature: number)
 		vscode.window.showInformationMessage(`CoMDe currently only supports .ts | .js | .py`);
 	}
 }
+```
+
+# index.ts -- low temperature: Typescript
 
 
+This code is a Typescript function that will be executed when the extension is activated. It registers three commands with the editor, and then subscribes to them.
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
+```
 export function activate(context: vscode.ExtensionContext) {
 
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
@@ -126,7 +155,7 @@ export function activate(context: vscode.ExtensionContext) {
 		await logic(editor, lowTemp)
 	});
 
-	let disposable2 = vscode.commands.registerCommand('comde.midTemp', async () => {
+	let disposable2 = vscode.commands.registerCommand('comde.medTemp', async () => {
 		await logic(editor, midTemp)
 	});
 	let disposable3 = vscode.commands.registerCommand('comde.highTemp', async () => {
@@ -137,6 +166,4 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(disposable2);
 	context.subscriptions.push(disposable3);
 }
-
-// this method is called when your extension is deactivated
-export function deactivate() { }
+```
