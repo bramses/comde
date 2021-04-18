@@ -76,9 +76,12 @@ const fetchCompletion = async (prompt: string, temperature: number) => {
 }
 
 const appendToMD = (filename: string = "No Filename Found", temperature:number, language: string, descriptionResult: string, codeBlock: string = "") => {
-	const mdResult = `# ${filename} -- ${temperature == lowTemp ? "low temperature" : temperature == midTemp ? "mid temperature" : "high temperature"}: ${language}\n${descriptionResult}\n\n\`\`\`\n${codeBlock}\n\`\`\`\n`
+	const relativeFilename: string | undefined = filename.split('/').slice(-1)[0]
+	const path = filename.split('/').slice(0, filename.split('/').length - 1).join('/')
+	const mdResult = `# ${relativeFilename} -- ${temperature == lowTemp ? "low temperature" : temperature == midTemp ? "mid temperature" : "high temperature"}: ${language}\n${descriptionResult}\n\n\`\`\`\n${codeBlock}\n\`\`\`\n`
 
-	fs.appendFile('COMDE.md', mdResult, function (err) {
+
+	fs.appendFile(path + '/COMDE.md', mdResult, function (err) {
 		if (err) {
 			vscode.window.showInformationMessage("Error appending to COMDE.md, see log.");
 			console.error(err)
@@ -94,7 +97,6 @@ const logic = async (editor: vscode.TextEditor | undefined, temperature: number)
 	const codeBlock: string | undefined = editor?.document.getText(editor.selection)
 	const filename: string[] | undefined = editor?.document.fileName.split('.');
 	const fileType: string | undefined = filename?.slice(-1)[0]
-	const relativeFilename: string | undefined = editor?.document.fileName.split('/').slice(-1)[0]
 
 	let descriptionResult = ""
 
@@ -106,7 +108,7 @@ const logic = async (editor: vscode.TextEditor | undefined, temperature: number)
 		}, async (progress) => {
 			progress.report({ increment: 0 });
 			descriptionResult = await fetchCompletion(descriptionPrompt('Javascript', codeBlock), temperature)
-			appendToMD(relativeFilename, temperature, "Javascript", descriptionResult, codeBlock)
+			appendToMD(editor?.document.fileName, temperature, "Javascript", descriptionResult, codeBlock)
 			vscode.window.showInformationMessage(descriptionResult);
 			progress.report({ increment: 100 });
 		});
@@ -119,7 +121,7 @@ const logic = async (editor: vscode.TextEditor | undefined, temperature: number)
 		}, async (progress) => {
 			progress.report({ increment: 0 });
 			descriptionResult = await fetchCompletion(descriptionPrompt('Python', codeBlock), temperature)
-			appendToMD(relativeFilename, temperature, "Python", descriptionResult, codeBlock)
+			appendToMD(editor?.document.fileName, temperature, "Python", descriptionResult, codeBlock)
 			vscode.window.showInformationMessage(descriptionResult);
 			progress.report({ increment: 100 });
 		});
@@ -132,7 +134,7 @@ const logic = async (editor: vscode.TextEditor | undefined, temperature: number)
 		}, async (progress) => {
 			progress.report({ increment: 0 });
 			descriptionResult = await fetchCompletion(descriptionPrompt('Typescript', codeBlock), temperature)
-			appendToMD(relativeFilename, temperature, "Typescript", descriptionResult, codeBlock)
+			appendToMD(editor?.document.fileName, temperature, "Typescript", descriptionResult, codeBlock)
 			vscode.window.showInformationMessage(descriptionResult);
 			progress.report({ increment: 100 });
 		});
