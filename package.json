@@ -2,7 +2,7 @@
 	"name": "comde",
 	"displayName": "CoMDe",
 	"description": "Highlight code, use GPT-3 to make a MarkDown description of it",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"icon": "comdlogo.png",
 	"author": { "name": "Bram Adams", "url": "https://www.bramadams.dev/" },
 	"publisher": "sharingfiction",
