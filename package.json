@@ -12,7 +12,8 @@
 	"activationEvents": [
 		"onCommand:comde.lowTemp",
 		"onCommand:comde.midTemp",
-		"onCommand:comde.highTemp"
+		"onCommand:comde.highTemp",
+		"onCommand:comde.setKey"
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
@@ -28,6 +29,10 @@
 			{
 				"command": "comde.highTemp",
 				"title": "COMDE - High Temp"
+			},
+			{
+				"command": "comde.setKey",
+				"title": "Set OpenAI API Key"
 			}
 		],
 		"menus": {

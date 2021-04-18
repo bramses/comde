@@ -1,23 +1,53 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode'
-import * as dotenv from 'dotenv'
 // @ts-ignore
 import * as OpenAI from '../openai/index.js'
 import fetch from 'node-fetch'
 import * as fs from 'fs'
 
-dotenv.config()
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-const openai = new OpenAI(OPENAI_API_KEY);
+// dotenv.config()
+let OPENAI_API_KEY = "";
+let openai: any = null
 
 const lowTemp = 0.05
 const midTemp = 0.5
 const highTemp = 1.0
 
+
+async function showInputBox() {
+	const result: string | undefined = await vscode.window.showInputBox({
+		value: '',
+		placeHolder: 'Input your OpenAI API Key',
+	});
+
+	try {
+		if (result) {
+			setAPIKey(result)
+			vscode.window.showInformationMessage("Key added to CoMDe session!");
+		} else {
+			throw new Error('result is undefined')
+		}
+	} catch (error) {
+		console.error("Invalid key") // todo some 401 magic from actual outbound call
+		return "Invalid Key"
+	}
+
+
+}
+
+const setAPIKey = (key:string) => {
+	OPENAI_API_KEY = key
+	openai = new OpenAI(OPENAI_API_KEY);
+	// todo some test call to the openai api
+}
+
 const fetchCompletion = async (prompt: string, temperature: number) => {
 
 	try {
+		if (OPENAI_API_KEY == "") {
+			throw new Error("OpenAI API Key must be set. Press CMD+Shift+P and type \"Set OpenAI API Key\"")
+		}
 		const { url, data, reqOpts } = await openai.complete({
 			prompt: prompt,
 			maxTokens: 75,
@@ -121,6 +151,11 @@ export function activate(context: vscode.ExtensionContext) {
 	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "comde" is now active!');
 	const editor = vscode.window.activeTextEditor;
+	vscode.window.showInformationMessage(`To get started, your OpenAI API Key must be set. Press CMD+Shift+P and type \"Set OpenAI API Key\"`);
+
+	let setKeyDisposable = vscode.commands.registerCommand('comde.setKey', async () => {
+		await showInputBox()
+	});
 
 	let disposable = vscode.commands.registerCommand('comde.lowTemp', async () => {
 		await logic(editor, lowTemp)
@@ -136,6 +171,7 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(disposable);
 	context.subscriptions.push(disposable2);
 	context.subscriptions.push(disposable3);
+	context.subscriptions.push(setKeyDisposable);
 }
 
 // this method is called when your extension is deactivated
