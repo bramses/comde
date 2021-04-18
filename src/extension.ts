@@ -152,7 +152,6 @@ export function activate(context: vscode.ExtensionContext) {
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "comde" is now active!');
-	const editor = vscode.window.activeTextEditor;
 	vscode.window.showInformationMessage(`To get started, your OpenAI API Key must be set. Press CMD+Shift+P and type \"Set OpenAI API Key\"`);
 
 	let setKeyDisposable = vscode.commands.registerCommand('comde.setKey', async () => {
@@ -160,13 +159,16 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	let disposable = vscode.commands.registerCommand('comde.lowTemp', async () => {
+		const editor = vscode.window.activeTextEditor;
 		await logic(editor, lowTemp)
 	});
 
 	let disposable2 = vscode.commands.registerCommand('comde.midTemp', async () => {
+		const editor = vscode.window.activeTextEditor;
 		await logic(editor, midTemp)
 	});
 	let disposable3 = vscode.commands.registerCommand('comde.highTemp', async () => {
+		const editor = vscode.window.activeTextEditor;
 		await logic(editor, highTemp)
 	});
 
